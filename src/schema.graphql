@@ -28,6 +28,8 @@ type Place {
   lng: Float!
   address: String!
   isFav: Boolean!
+  userId: Int!
+  user: User!
   createdAt: String!
   updatedAt: String
 }
@@ -45,10 +47,31 @@ type Ride {
   distance: String!
   duration: String!
   driverId: Int
+  driver: User!
   passengerId: Int!
+  passenger: User!
+  chat: Chat
   chatId: Int
   createdAt: String!
-  updatedAt: String!
+  updatedAt: String
+}
+
+type EmailSignInResponse {
+  ok: Boolean!
+  error: String
+  token: String
+}
+
+type Mutation {
+  EmailSignIn(email: String!, password: String!): EmailSignInResponse!
+  EmailSignUp(firstName: String!, lastName: String!, email: String!, password: String!, profilePhoto: String!, age: Int!, phoneNumber: String!): EmailSignUpResponse!
+  FacebookConnect(firstName: String!, lastName: String!, email: String, fbId: String!): FacebookConnectResponse!
+}
+
+type EmailSignUpResponse {
+  ok: Boolean!
+  error: String
+  token: String
 }
 
 type FacebookConnectResponse {
@@ -57,8 +80,14 @@ type FacebookConnectResponse {
   token: String
 }
 
-type Mutation {
-  FacebookConnect(firstName: String!, lastName: String!, email: String, fbId: String!): FacebookConnectResponse!
+type GetMyProfileResponse {
+  ok: Boolean!
+  error: String
+  user: User
+}
+
+type Query {
+  GetMyProfile: GetMyProfileResponse!
 }
 
 type User {
@@ -80,17 +109,14 @@ type User {
   lastLat: Float
   lastOrientation: Float
   fbId: String
-  chat: Chat
-  message: [Message]
-  verifications: [Verification]
+  messages: [Message]
   ridesAsPassenger: [Ride]
   ridesAsDriver: [Ride]
+  chatsAsDriver: [Chat]
+  chatsAsPassenger: [Chat]
+  places: [Place]
   createdAt: String!
   updatedAt: String
-}
-
-type Query {
-  user: User
 }
 
 type Verification {
